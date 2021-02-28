@@ -1,0 +1,12 @@
+.Board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 562px;
+  border: 1px solid black;
+}
+
+.Board div {
+  width: 70px;
+  height: 70px;
+  border: 1px solid black;
+}
