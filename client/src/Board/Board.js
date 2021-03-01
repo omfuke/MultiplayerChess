@@ -49,6 +49,22 @@ function Board() {
       { name: "rook", color: "white" },
     ],
   ]);
+
+  const [location, setLocation] = useState(null);
+
+  if (location) {
+    console.log(location);
+  }
+
+  const checking = (detail, position) => {
+    const newboard = board.map(function (arr) {
+      return arr.slice();
+    });
+    newboard[6][7] = board[5][7];
+    newboard[5][7] = board[6][7];
+
+    setBoard(newboard);
+  };
   let tyle;
   return (
     <div
@@ -62,8 +78,6 @@ function Board() {
     >
       <div className="Board">
         {board.map((i, index) => {
-          console.log(index);
-
           return i.map((j, ind) => {
             if (index % 2 === 0) {
               if (ind % 2 === 0) {
@@ -79,7 +93,16 @@ function Board() {
               }
             }
 
-            return <Tyle tyle={tyle} detail={j}></Tyle>;
+            return (
+              <Tyle
+                key={[index, ind]}
+                checking={checking}
+                tyle={tyle}
+                detail={j}
+                position={[index, ind]}
+                selected={setLocation}
+              ></Tyle>
+            );
           });
         })}
       </div>
