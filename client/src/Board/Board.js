@@ -60,8 +60,17 @@ function Board() {
     const newboard = board.map(function (arr) {
       return arr.slice();
     });
-    newboard[6][7] = board[5][7];
-    newboard[5][7] = board[6][7];
+    newboard[position[0]][position[1]] = {
+      ...board[position[0]][position[1]],
+      selected: true,
+    };
+    newboard.map((i, index) =>
+      i.map((j, ind) => {
+        if ((index !== position[0] || ind !== position[1]) && j !== null) {
+          j.selected = false;
+        }
+      })
+    );
 
     setBoard(newboard);
   };

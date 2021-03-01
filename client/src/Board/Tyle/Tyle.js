@@ -12,7 +12,12 @@ function Tyle({ tyle, detail, position, checking, selected }) {
   return (
     <div
       className="Tyle"
-      style={{ backgroundColor: tyle ? "#D68910" : "#ffcc99" }}
+      style={{
+        backgroundColor: tyle ? "#D68910" : "#ffcc99",
+        ...(detail != null && detail.selected
+          ? { border: "1px solid lightgreen" }
+          : {}),
+      }}
     >
       <div
         onClick={() => clickHandler(checking, detail, position)}
