@@ -1,12 +1,41 @@
 import React, { useState } from "react";
 import "./Tyle.css";
 
-function Tyle({ tyle, detail, position, checking, selected }) {
-  // console.log(detail, position);
+function Tyle({
+  tyle,
+  detail,
+  position,
+  checking,
+  selected,
+  allFalse,
+  goToLocation,
+}) {
+  //console.log(detail, position);
+
+  // const [click, setClick] = useState(false);
 
   const clickHandler = (checking, detail, position) => {
-    checking(detail, position);
-    // selected(position);
+    // setClick(!click);
+    // if (click) {
+    //   allFalse();
+    //   return;
+    // }
+
+    if (detail.jump) {
+      goToLocation(position);
+      return;
+    }
+
+    if (detail.color) {
+      selected(position);
+      allFalse();
+      console.log("clickable");
+      checking(detail, position);
+
+      return;
+    }
+
+    return;
   };
 
   return (
@@ -14,9 +43,13 @@ function Tyle({ tyle, detail, position, checking, selected }) {
       className="Tyle"
       style={{
         backgroundColor: tyle ? "#D68910" : "#ffcc99",
-        ...(detail != null && detail.selected
-          ? { border: "1px solid lightgreen" }
+
+        ...(detail.selected
+          ? {
+              boxShadow: "inset 0 0 10px #311b0b",
+            }
           : {}),
+        ...(detail.jump && { boxShadow: "inset 0 0 15px #0f0" }),
       }}
     >
       <div
@@ -24,7 +57,9 @@ function Tyle({ tyle, detail, position, checking, selected }) {
         style={{
           width: "50px",
           height: "50px",
-          cursor: "pointer",
+          ...(detail.color || detail.jump
+            ? { cursor: "pointer" }
+            : { cursor: "auto" }),
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
