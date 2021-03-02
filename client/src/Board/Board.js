@@ -89,6 +89,9 @@ function Board() {
 
   const [location, setLocation] = useState(null);
 
+  const [chance, setChance] = useState(false);
+  const piece = chance ? "black" : "white";
+
   if (location) {
     //console.log(location);
   }
@@ -170,7 +173,7 @@ function Board() {
         }
       })
     );
-
+    setChance(!chance);
     setBoard(newboard);
   };
   let tyle;
@@ -211,6 +214,7 @@ function Board() {
                 selected={setLocation}
                 allFalse={allFalse}
                 goToLocation={goToLocation}
+                piece={piece}
               ></Tyle>
             );
           });
