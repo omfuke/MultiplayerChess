@@ -90,11 +90,11 @@ function Board() {
   const [location, setLocation] = useState(null);
 
   if (location) {
-    console.log(location);
+    //console.log(location);
   }
 
   const goToLocation = (position) => {
-    console.log(location, position);
+    // console.log(location, position);
 
     const newboard = board.map(function (arr) {
       return arr.slice();
@@ -140,16 +140,28 @@ function Board() {
       return arr.slice();
     });
 
-    const availablePositions = pawnRules(position, detail, newboard);
+    const pieceRules = () => {
+      switch (detail.name) {
+        case "pawn":
+          return pawnRules(position, detail, newboard);
+
+        default:
+          return pawnRules(position, detail, newboard);
+      }
+    };
+
+    const availablePositions = pieceRules();
 
     newboard[position[0]][position[1]] = {
       ...board[position[0]][position[1]],
       selected: true,
     };
 
-    availablePositions.map((pos) => {
-      newboard[pos[0]][pos[1]] = { ...board[pos[0]][pos[1]], jump: true };
-    });
+    if (availablePositions) {
+      availablePositions.map((pos) => {
+        newboard[pos[0]][pos[1]] = { ...board[pos[0]][pos[1]], jump: true };
+      });
+    }
 
     newboard.map((i, index) =>
       i.map((j, ind) => {

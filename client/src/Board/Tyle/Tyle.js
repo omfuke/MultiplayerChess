@@ -10,7 +10,7 @@ function Tyle({
   allFalse,
   goToLocation,
 }) {
-  //console.log(detail, position);
+  // console.log(detail, position);
 
   // const [click, setClick] = useState(false);
 
@@ -29,7 +29,7 @@ function Tyle({
     if (detail.color) {
       selected(position);
       allFalse();
-      console.log("clickable");
+      //console.log("clickable");
       checking(detail, position);
 
       return;
