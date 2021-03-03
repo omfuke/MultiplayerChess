@@ -3,6 +3,7 @@ import "./Board.css";
 import Tyle from "./Tyle/Tyle";
 import { pawnRules } from "./Rules/Pawn";
 import { rookRules } from "./Rules/Rook";
+import { KnightRules } from "./Rules/Knight";
 
 function Board() {
   const [board, setBoard] = useState([
@@ -167,6 +168,9 @@ function Board() {
 
         case "rook":
           return rookRules(position, detail, newboard);
+
+        case "knight":
+          return KnightRules(position, detail, newboard);
 
         default:
           return pawnRules(position, detail, newboard);
