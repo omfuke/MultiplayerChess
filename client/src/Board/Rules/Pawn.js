@@ -13,28 +13,41 @@ const pawnRules = (position, detail, board) => {
         locations.push(pos);
       }
 
-      if (board[position[0] - 1][position[1] - 1].color == "black") {
-        let pos = [position[0] - 1, position[1] - 1];
-        locations.push(pos);
+      if (position[1] - 1 >= 0) {
+        if (board[position[0] - 1][position[1] - 1].color == "black") {
+          let pos = [position[0] - 1, position[1] - 1];
+          locations.push(pos);
+        }
       }
-      if (board[position[0] - 1][position[1] + 1].color == "black") {
-        let pos = [position[0] - 1, position[1] + 1];
-        locations.push(pos);
+      if (position[1] + 1 < 8) {
+        if (board[position[0] - 1][position[1] + 1].color == "black") {
+          let pos = [position[0] - 1, position[1] + 1];
+          locations.push(pos);
+        }
       }
+
       return locations;
     } else {
-      if (board[position[0] - 1][position[1]].name == null) {
-        let pos = [position[0] - 1, position[1]];
-        locations.push(pos);
+      if (position[0] - 1 >= 0) {
+        if (board[position[0] - 1][position[1]].name == null) {
+          let pos = [position[0] - 1, position[1]];
+          locations.push(pos);
+        }
       }
-      if (board[position[0] - 1][position[1] - 1].color == "black") {
-        let pos = [position[0] - 1, position[1] - 1];
-        locations.push(pos);
+
+      if (position[1] - 1 >= 0 && position[0] - 1 >= 0) {
+        if (board[position[0] - 1][position[1] - 1].color == "black") {
+          let pos = [position[0] - 1, position[1] - 1];
+          locations.push(pos);
+        }
       }
-      if (board[position[0] - 1][position[1] + 1].color == "black") {
-        let pos = [position[0] - 1, position[1] + 1];
-        locations.push(pos);
+      if (position[1] + 1 < 8 && position[0] - 1 >= 0) {
+        if (board[position[0] - 1][position[1] + 1].color == "black") {
+          let pos = [position[0] - 1, position[1] + 1];
+          locations.push(pos);
+        }
       }
+
       return locations;
     }
   } else {
@@ -49,28 +62,40 @@ const pawnRules = (position, detail, board) => {
         locations.push(pos);
       }
 
-      if (board[position[0] + 1][position[1] - 1].color == "white") {
-        let pos = [position[0] + 1, position[1] - 1];
-        locations.push(pos);
+      if (position[1] - 1 >= 0) {
+        if (board[position[0] + 1][position[1] - 1].color == "white") {
+          let pos = [position[0] + 1, position[1] - 1];
+          locations.push(pos);
+        }
       }
-      if (board[position[0] + 1][position[1] + 1].color == "white") {
-        let pos = [position[0] + 1, position[1] + 1];
-        locations.push(pos);
+      if (position[1] + 1 < 8) {
+        if (board[position[0] + 1][position[1] + 1].color == "white") {
+          let pos = [position[0] + 1, position[1] + 1];
+          locations.push(pos);
+        }
       }
+
       return locations;
     } else {
-      if (board[position[0] + 1][position[1]].name == null) {
-        let pos = [position[0] + 1, position[1]];
-        locations.push(pos);
+      if (position[0] + 1 < 8) {
+        if (board[position[0] + 1][position[1]].name == null) {
+          let pos = [position[0] + 1, position[1]];
+          locations.push(pos);
+        }
       }
-      if (board[position[0] + 1][position[1] - 1].color == "white") {
-        let pos = [position[0] + 1, position[1] - 1];
-        locations.push(pos);
+      if (position[1] - 1 >= 0 && position[0] + 1 < 8) {
+        if (board[position[0] + 1][position[1] - 1].color == "white") {
+          let pos = [position[0] + 1, position[1] - 1];
+          locations.push(pos);
+        }
       }
-      if (board[position[0] + 1][position[1] + 1].color == "white") {
-        let pos = [position[0] + 1, position[1] + 1];
-        locations.push(pos);
+      if (position[1] + 1 < 8 && position[0] + 1 < 8) {
+        if (board[position[0] + 1][position[1] + 1].color == "white") {
+          let pos = [position[0] + 1, position[1] + 1];
+          locations.push(pos);
+        }
       }
+
       return locations;
     }
   }
