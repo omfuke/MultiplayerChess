@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Board.css";
 import Tyle from "./Tyle/Tyle";
 import { pawnRules } from "./Rules/Pawn";
+import { rookRules } from "./Rules/Rook";
 
 function Board() {
   const [board, setBoard] = useState([
@@ -110,6 +111,21 @@ function Board() {
       })
     );
 
+    //killing logic
+
+    if (board[position[0]][position[1]].name) {
+      newboard[location[0]][location[1]] = {
+        name: null,
+        selected: false,
+        jump: false,
+      };
+      newboard[position[0]][position[1]] = board[location[0]][location[1]];
+      setBoard(newboard);
+      setChance(!chance);
+
+      return;
+    }
+
     newboard[location[0]][location[1]] = board[position[0]][position[1]];
     newboard[position[0]][position[1]] = board[location[0]][location[1]];
     setBoard(newboard);
@@ -148,6 +164,9 @@ function Board() {
       switch (detail.name) {
         case "pawn":
           return pawnRules(position, detail, newboard);
+
+        case "rook":
+          return rookRules(position, detail, newboard);
 
         default:
           return pawnRules(position, detail, newboard);
