@@ -26,44 +26,44 @@ function Board() {
       { name: "pawn", color: "black", selected: false, jump: false },
     ],
     [
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
     ],
     [
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
     ],
     [
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
     ],
     [
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
-      { selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
+      { name: null, selected: false, jump: false },
     ],
     [
       { name: "pawn", color: "white", selected: false, jump: false },
@@ -113,6 +113,7 @@ function Board() {
     newboard[location[0]][location[1]] = board[position[0]][position[1]];
     newboard[position[0]][position[1]] = board[location[0]][location[1]];
     setBoard(newboard);
+    setChance(!chance);
 
     return;
   };
@@ -173,7 +174,7 @@ function Board() {
         }
       })
     );
-    setChance(!chance);
+
     setBoard(newboard);
   };
   let tyle;

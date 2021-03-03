@@ -1,45 +1,78 @@
 const pawnRules = (position, detail, board) => {
   console.log(detail);
-  if (position[0] === 1 || position[0] === 6) {
-    if (detail.color === "white") {
-      let locations = [];
-      let pos = [position[0] - 1, position[1]];
-      locations.push(pos);
-      pos = [position[0] - 2, position[1]];
-      locations.push(pos);
 
-      //console.log(locations, "hello");
+  let locations = [];
+  if (detail.color === "white") {
+    if (position[0] === 6) {
+      if (board[position[0] - 1][position[1]].name == null) {
+        let pos = [position[0] - 1, position[1]];
+        locations.push(pos);
+      }
+      if (board[position[0] - 2][position[1]].name == null) {
+        let pos = [position[0] - 2, position[1]];
+        locations.push(pos);
+      }
 
+      if (board[position[0] - 1][position[1] - 1].color == "black") {
+        let pos = [position[0] - 1, position[1] - 1];
+        locations.push(pos);
+      }
+      if (board[position[0] - 1][position[1] + 1].color == "black") {
+        let pos = [position[0] - 1, position[1] + 1];
+        locations.push(pos);
+      }
+      return locations;
+    } else {
+      if (board[position[0] - 1][position[1]].name == null) {
+        let pos = [position[0] - 1, position[1]];
+        locations.push(pos);
+      }
+      if (board[position[0] - 1][position[1] - 1].color == "black") {
+        let pos = [position[0] - 1, position[1] - 1];
+        locations.push(pos);
+      }
+      if (board[position[0] - 1][position[1] + 1].color == "black") {
+        let pos = [position[0] - 1, position[1] + 1];
+        locations.push(pos);
+      }
       return locations;
     }
-
-    let locations = [];
-    let pos = [position[0] + 1, position[1]];
-    locations.push(pos);
-    pos = [position[0] + 2, position[1]];
-    locations.push(pos);
-
-    //console.log(locations, "hello");
-
-    return locations;
   } else {
-    if (detail.color === "white") {
-      let locations = [];
-      let pos = [position[0] - 1, position[1]];
-      locations.push(pos);
+    if (position[0] === 1) {
+      if (board[position[0] + 1][position[1]].name == null) {
+        let pos = [position[0] + 1, position[1]];
+        locations.push(pos);
+      }
 
-      //console.log(locations, "hello");
+      if (board[position[0] + 2][position[1]].name == null) {
+        let pos = [position[0] + 2, position[1]];
+        locations.push(pos);
+      }
 
+      if (board[position[0] + 1][position[1] - 1].color == "white") {
+        let pos = [position[0] + 1, position[1] - 1];
+        locations.push(pos);
+      }
+      if (board[position[0] + 1][position[1] + 1].color == "white") {
+        let pos = [position[0] + 1, position[1] + 1];
+        locations.push(pos);
+      }
+      return locations;
+    } else {
+      if (board[position[0] + 1][position[1]].name == null) {
+        let pos = [position[0] + 1, position[1]];
+        locations.push(pos);
+      }
+      if (board[position[0] + 1][position[1] - 1].color == "white") {
+        let pos = [position[0] + 1, position[1] - 1];
+        locations.push(pos);
+      }
+      if (board[position[0] + 1][position[1] + 1].color == "white") {
+        let pos = [position[0] + 1, position[1] + 1];
+        locations.push(pos);
+      }
       return locations;
     }
-
-    let locations = [];
-    let pos = [position[0] + 1, position[1]];
-    locations.push(pos);
-
-    //console.log(locations, "hello");
-
-    return locations;
   }
 };
 
