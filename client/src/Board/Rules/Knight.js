@@ -106,7 +106,7 @@ const KnightRules = (position, detail, board) => {
         locations.push(pos);
       }
     }
-    if (position[0] + 2 < 8 && position[1] - 1 < 8) {
+    if (position[0] + 2 < 8 && position[1] - 1 >= 0) {
       if (
         board[position[0] + 2][position[1] - 1].color === "white" ||
         board[position[0] + 2][position[1] - 1].name === null

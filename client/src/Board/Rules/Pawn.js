@@ -1,6 +1,4 @@
 const pawnRules = (position, detail, board) => {
-  console.log(detail);
-
   let locations = [];
   if (detail.color === "white") {
     if (position[0] === 6) {

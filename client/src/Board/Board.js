@@ -7,6 +7,8 @@ import { KnightRules } from "./Rules/Knight";
 import { BishopRules } from "./Rules/Bishop";
 import { QueenRules } from "./Rules/Queen";
 import { KingRules } from "./Rules/King";
+import { pawnRules2 } from "./Rules/PawnRules2";
+import { KnightRules2 } from "./Rules/KnightRules2";
 
 function Board() {
   const [board, setBoard] = useState([
@@ -101,6 +103,77 @@ function Board() {
     //console.log(location);
   }
 
+  const checkKing = (board, availablePositions) => {
+    const pieces = [];
+    let indexes = [];
+    board.map((x, index) =>
+      x.map((p, ind) => {
+        if (p.color === "black") {
+          pieces.push({ ...p, position: [index, ind] });
+        }
+      })
+    );
+
+    for (const key in pieces) {
+      if (Object.hasOwnProperty.call(pieces, key)) {
+        const element = pieces[key];
+        // console.log(element);
+        let pos;
+
+        switch (element.name) {
+          case "pawn":
+            pos = pawnRules2(element.position, element, board);
+            break;
+          case "rook":
+            pos = rookRules(element.position, element, board);
+            break;
+
+          case "knight":
+            pos = KnightRules2(element.position, element, board);
+            break;
+
+          case "queen":
+            pos = QueenRules(element.position, element, board);
+            break;
+
+          case "king":
+            pos = KingRules(element.position, element, board);
+            break;
+
+          case "bishop":
+            pos = BishopRules(element.position, element, board);
+
+            break;
+
+          default:
+            pos = [];
+            break;
+        }
+
+        console.log(pos);
+        availablePositions.map((x, index) => {
+          pos.map((p) => {
+            if (JSON.stringify(x) == JSON.stringify(p)) {
+              indexes.push(index);
+              console.log(x);
+            }
+          });
+        });
+      }
+    }
+
+    const indexSet = new Set(indexes);
+    const arrayWithValuesRemoved = availablePositions.filter(
+      (value, i) => !indexSet.has(i)
+    );
+    console.log(arrayWithValuesRemoved);
+
+    console.log(indexes);
+    // console.log(pieces);
+    console.log(availablePositions);
+    return arrayWithValuesRemoved;
+  };
+
   const goToLocation = (position) => {
     // console.log(location, position);
 
@@ -171,7 +244,6 @@ function Board() {
 
         case "rook":
           return rookRules(position, detail, newboard);
-
         case "knight":
           return KnightRules(position, detail, newboard);
         case "bishop":
@@ -187,7 +259,11 @@ function Board() {
       }
     };
 
-    const availablePositions = pieceRules();
+    let availablePositions = pieceRules();
+
+    if (detail.name === "king") {
+      availablePositions = checkKing(newboard, availablePositions);
+    }
 
     newboard[position[0]][position[1]] = {
       ...board[position[0]][position[1]],
