@@ -4,6 +4,9 @@ import Tyle from "./Tyle/Tyle";
 import { pawnRules } from "./Rules/Pawn";
 import { rookRules } from "./Rules/Rook";
 import { KnightRules } from "./Rules/Knight";
+import { BishopRules } from "./Rules/Bishop";
+import { QueenRules } from "./Rules/Queen";
+import { KingRules } from "./Rules/King";
 
 function Board() {
   const [board, setBoard] = useState([
@@ -11,8 +14,8 @@ function Board() {
       { name: "rook", color: "black", selected: false, jump: false },
       { name: "knight", color: "black", selected: false, jump: false },
       { name: "bishop", color: "black", selected: false, jump: false },
-      { name: "king", color: "black", selected: false, jump: false },
       { name: "queen", color: "black", selected: false, jump: false },
+      { name: "king", color: "black", selected: false, jump: false },
       { name: "bishop", color: "black", selected: false, jump: false },
       { name: "knight", color: "black", selected: false, jump: false },
       { name: "rook", color: "black", selected: false, jump: false },
@@ -81,8 +84,8 @@ function Board() {
       { name: "rook", color: "white", selected: false, jump: false },
       { name: "knight", color: "white", selected: false, jump: false },
       { name: "bishop", color: "white", selected: false, jump: false },
-      { name: "king", color: "white", selected: false, jump: false },
       { name: "queen", color: "white", selected: false, jump: false },
+      { name: "king", color: "white", selected: false, jump: false },
       { name: "bishop", color: "white", selected: false, jump: false },
       { name: "knight", color: "white", selected: false, jump: false },
       { name: "rook", color: "white", selected: false, jump: false },
@@ -171,6 +174,13 @@ function Board() {
 
         case "knight":
           return KnightRules(position, detail, newboard);
+        case "bishop":
+          return BishopRules(position, detail, newboard);
+        case "queen":
+          return QueenRules(position, detail, newboard);
+
+        case "king":
+          return KingRules(position, detail, newboard);
 
         default:
           return pawnRules(position, detail, newboard);

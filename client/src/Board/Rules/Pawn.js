@@ -8,7 +8,10 @@ const pawnRules = (position, detail, board) => {
         let pos = [position[0] - 1, position[1]];
         locations.push(pos);
       }
-      if (board[position[0] - 2][position[1]].name == null) {
+      if (
+        board[position[0] - 2][position[1]].name == null &&
+        board[position[0] - 1][position[1]].name == null
+      ) {
         let pos = [position[0] - 2, position[1]];
         locations.push(pos);
       }
@@ -57,7 +60,10 @@ const pawnRules = (position, detail, board) => {
         locations.push(pos);
       }
 
-      if (board[position[0] + 2][position[1]].name == null) {
+      if (
+        board[position[0] + 2][position[1]].name == null &&
+        board[position[0] + 1][position[1]].name == null
+      ) {
         let pos = [position[0] + 2, position[1]];
         locations.push(pos);
       }
