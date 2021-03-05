@@ -190,6 +190,7 @@ function Board() {
       i.map((j, ind) => {
         j.selected = false;
         j.jump = false;
+        j.check = false;
       })
     );
 
