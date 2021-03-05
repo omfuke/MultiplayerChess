@@ -102,6 +102,46 @@ function Board() {
 
   const [chance, setChance] = useState(false);
   const piece = chance ? "black" : "white";
+  const [promoteWhite, setPromoteWhite] = useState(false);
+
+  const [promoteBlack, setPromoteBlack] = useState(false);
+  const [promoteWhiteLocation, setPromoteWhiteLocation] = useState(null);
+
+  const [promoteBlackLocation, setPromoteBlackLocation] = useState(null);
+
+  const promoteWhiteHandler = (piece) => {
+    const newboard = board.map(function (arr) {
+      return arr.slice();
+    });
+
+    newboard[promoteWhiteLocation[0]][promoteWhiteLocation[1]] = {
+      name: piece,
+      color: "white",
+      selected: false,
+      jump: false,
+    };
+    setPromoteWhite(false);
+    setPromoteWhiteLocation(null);
+    setBoard(newboard);
+    return;
+  };
+
+  const promoteBlackHandler = (piece) => {
+    const newboard = board.map(function (arr) {
+      return arr.slice();
+    });
+
+    newboard[promoteBlackLocation[0]][promoteBlackLocation[1]] = {
+      name: piece,
+      color: "black",
+      selected: false,
+      jump: false,
+    };
+    setPromoteBlack(false);
+    setPromoteBlackLocation(null);
+    setBoard(newboard);
+    return;
+  };
 
   if (location) {
     //console.log(location);
@@ -197,11 +237,17 @@ function Board() {
     //killing logic
 
     if (board[position[0]][position[1]].name) {
+      if (board[position[0]][position[1]].name === "king") {
+        alert("game over");
+        return;
+      }
+
       newboard[location[0]][location[1]] = {
         name: null,
         selected: false,
         jump: false,
       };
+
       newboard[position[0]][position[1]] = board[location[0]][location[1]];
       const piece2 = chance ? "white" : "black";
 
@@ -275,15 +321,25 @@ function Board() {
               console.log(kingLocation, "hiiiiiiiiiiiiiiii");
             }
           });
+        }
+      }
 
-          // availablePositions.map((x, index) => {
-          //   pos.map((p) => {
-          //     if (JSON.stringify(x) == JSON.stringify(p)) {
-          //       indexes.push(index);
-          //       console.log(x);
-          //     }
-          //   });
-          // });
+      if (
+        board[location[0]][location[1]].name === "pawn" &&
+        board[location[0]][location[1]].color === "white"
+      ) {
+        if (position[0] === 0) {
+          setPromoteWhite(true);
+          setPromoteWhiteLocation([position[0], position[1]]);
+        }
+      }
+      if (
+        board[location[0]][location[1]].name === "pawn" &&
+        board[location[0]][location[1]].color === "black"
+      ) {
+        if (position[0] === 7) {
+          setPromoteBlack(true);
+          setPromoteBlackLocation([position[0], position[1]]);
         }
       }
 
@@ -378,6 +434,24 @@ function Board() {
         //     }
         //   });
         // });
+      }
+    }
+    if (
+      board[location[0]][location[1]].name === "pawn" &&
+      board[location[0]][location[1]].color === "white"
+    ) {
+      if (position[0] === 0) {
+        setPromoteWhite(true);
+        setPromoteWhiteLocation([position[0], position[1]]);
+      }
+    }
+    if (
+      board[location[0]][location[1]].name === "pawn" &&
+      board[location[0]][location[1]].color === "black"
+    ) {
+      if (position[0] === 7) {
+        setPromoteBlack(true);
+        setPromoteBlackLocation([position[0], position[1]]);
       }
     }
 
@@ -506,6 +580,76 @@ function Board() {
           });
         })}
       </div>
+      {promoteWhite && (
+        <div>
+          <div
+            style={{
+              width: "50px",
+              backgroundColor: "black",
+              border: "1px solid black",
+              display: "flex",
+              flexDirection: "column",
+              padding: "5px",
+            }}
+          >
+            <i
+              style={{ marginBottom: "10px", color: "white" }}
+              onClick={() => promoteWhiteHandler("rook")}
+              className="fas fa-chess-rook fa-2x"
+            ></i>
+            <i
+              style={{ marginBottom: "10px", color: "white" }}
+              onClick={() => promoteWhiteHandler("queen")}
+              className="fas fa-chess-queen fa-2x"
+            ></i>
+            <i
+              style={{ marginBottom: "10px", color: "white" }}
+              onClick={() => promoteWhiteHandler("bishop")}
+              className="fas fa-chess-bishop fa-2x"
+            ></i>
+            <i
+              style={{ marginBottom: "10px", color: "white" }}
+              onClick={() => promoteWhiteHandler("knight")}
+              className="fas fa-chess-knight fa-2x"
+            ></i>
+          </div>
+        </div>
+      )}
+      {promoteBlack && (
+        <div>
+          <div
+            style={{
+              width: "50px",
+
+              border: "1px solid black",
+              display: "flex",
+              flexDirection: "column",
+              padding: "5px",
+            }}
+          >
+            <i
+              style={{ marginBottom: "10px" }}
+              onClick={() => promoteBlackHandler("rook")}
+              className="fas fa-chess-rook fa-2x"
+            ></i>
+            <i
+              style={{ marginBottom: "10px" }}
+              onClick={() => promoteBlackHandler("queen")}
+              className="fas fa-chess-queen fa-2x"
+            ></i>
+            <i
+              style={{ marginBottom: "10px" }}
+              onClick={() => promoteBlackHandler("bishop")}
+              className="fas fa-chess-bishop fa-2x"
+            ></i>
+            <i
+              style={{ marginBottom: "10px" }}
+              onClick={() => promoteBlackHandler("knight")}
+              className="fas fa-chess-knight fa-2x"
+            ></i>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
