@@ -1,5 +1,4 @@
 const KnightRules = (position, detail, board) => {
-  console.log("yehhh knight");
   const locations = [];
 
   if (detail.color === "white") {

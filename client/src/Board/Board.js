@@ -9,6 +9,10 @@ import { QueenRules } from "./Rules/Queen";
 import { KingRules } from "./Rules/King";
 import { pawnRules2 } from "./Rules/PawnRules2";
 import { KnightRules2 } from "./Rules/KnightRules2";
+import { RookRules2 } from "./Rules/RookRules2";
+import { QueenRules2 } from "./Rules/QueenRules2";
+import { BishopRules2 } from "./Rules/BishopRules2";
+import { KingRules2 } from "./Rules/KingRules2";
 
 function Board() {
   const [board, setBoard] = useState([
@@ -103,12 +107,13 @@ function Board() {
     //console.log(location);
   }
 
-  const checkKing = (board, availablePositions) => {
+  const checkKing = (board, availablePositions, detail) => {
+    const color = detail.color === "white" ? "black" : "white";
     const pieces = [];
     let indexes = [];
     board.map((x, index) =>
       x.map((p, ind) => {
-        if (p.color === "black") {
+        if (p.color === color) {
           pieces.push({ ...p, position: [index, ind] });
         }
       })
@@ -125,7 +130,7 @@ function Board() {
             pos = pawnRules2(element.position, element, board);
             break;
           case "rook":
-            pos = rookRules(element.position, element, board);
+            pos = RookRules2(element.position, element, board);
             break;
 
           case "knight":
@@ -133,15 +138,15 @@ function Board() {
             break;
 
           case "queen":
-            pos = QueenRules(element.position, element, board);
+            pos = QueenRules2(element.position, element, board);
             break;
 
           case "king":
-            pos = KingRules(element.position, element, board);
+            pos = KingRules2(element.position, element, board);
             break;
 
           case "bishop":
-            pos = BishopRules(element.position, element, board);
+            pos = BishopRules2(element.position, element, board);
 
             break;
 
@@ -197,6 +202,90 @@ function Board() {
         jump: false,
       };
       newboard[position[0]][position[1]] = board[location[0]][location[1]];
+      const piece2 = chance ? "white" : "black";
+
+      ////check
+      let kingLocation;
+
+      newboard.map((x, index) =>
+        x.map((p, ind) => {
+          if (p.color == piece2 && p.name == "king") {
+            kingLocation = [index, ind];
+            return;
+          }
+        })
+      );
+
+      console.log(kingLocation, piece2);
+
+      const pieces = [];
+
+      newboard.map((x, index) =>
+        x.map((p, ind) => {
+          if (p.color === piece) {
+            pieces.push({ ...p, position: [index, ind] });
+          }
+        })
+      );
+
+      for (const key in pieces) {
+        if (Object.hasOwnProperty.call(pieces, key)) {
+          const element = pieces[key];
+          // console.log(element);
+          let pos;
+
+          switch (element.name) {
+            case "pawn":
+              pos = pawnRules(element.position, element, newboard);
+              break;
+            case "rook":
+              pos = rookRules(element.position, element, newboard);
+              break;
+
+            case "knight":
+              pos = KnightRules(element.position, element, newboard);
+              break;
+
+            case "queen":
+              pos = QueenRules(element.position, element, newboard);
+              break;
+
+            case "king":
+              pos = KingRules(element.position, element, newboard);
+              break;
+
+            case "bishop":
+              pos = BishopRules(element.position, element, newboard);
+
+              break;
+
+            default:
+              pos = [];
+              break;
+          }
+
+          console.log(pos);
+          pos.map((p) => {
+            if (JSON.stringify(p) == JSON.stringify(kingLocation)) {
+              newboard[kingLocation[0]][kingLocation[1]] = {
+                ...newboard[kingLocation[0]][kingLocation[1]],
+                check: true,
+              };
+              console.log(kingLocation, "hiiiiiiiiiiiiiiii");
+            }
+          });
+
+          // availablePositions.map((x, index) => {
+          //   pos.map((p) => {
+          //     if (JSON.stringify(x) == JSON.stringify(p)) {
+          //       indexes.push(index);
+          //       console.log(x);
+          //     }
+          //   });
+          // });
+        }
+      }
+
       setBoard(newboard);
       setChance(!chance);
 
@@ -205,6 +294,92 @@ function Board() {
 
     newboard[location[0]][location[1]] = board[position[0]][position[1]];
     newboard[position[0]][position[1]] = board[location[0]][location[1]];
+
+    const piece2 = chance ? "white" : "black";
+
+    ////check
+    let kingLocation;
+
+    newboard.map((x, index) =>
+      x.map((p, ind) => {
+        if (p.color == piece2 && p.name == "king") {
+          kingLocation = [index, ind];
+          return;
+        }
+      })
+    );
+
+    console.log(kingLocation, piece2);
+
+    const pieces = [];
+
+    newboard.map((x, index) =>
+      x.map((p, ind) => {
+        if (p.color === piece) {
+          pieces.push({ ...p, position: [index, ind] });
+        }
+      })
+    );
+
+    for (const key in pieces) {
+      if (Object.hasOwnProperty.call(pieces, key)) {
+        const element = pieces[key];
+        // console.log(element);
+        let pos;
+
+        switch (element.name) {
+          case "pawn":
+            pos = pawnRules(element.position, element, newboard);
+            break;
+          case "rook":
+            pos = rookRules(element.position, element, newboard);
+            break;
+
+          case "knight":
+            pos = KnightRules(element.position, element, newboard);
+            break;
+
+          case "queen":
+            pos = QueenRules(element.position, element, newboard);
+            break;
+
+          case "king":
+            pos = KingRules(element.position, element, newboard);
+            break;
+
+          case "bishop":
+            pos = BishopRules(element.position, element, newboard);
+
+            break;
+
+          default:
+            pos = [];
+            break;
+        }
+
+        console.log(pos);
+        pos.map((p) => {
+          if (JSON.stringify(p) == JSON.stringify(kingLocation)) {
+            newboard[kingLocation[0]][kingLocation[1]] = {
+              ...newboard[kingLocation[0]][kingLocation[1]],
+              check: true,
+            };
+            console.log(kingLocation, "hiiiiiiiiiiiiiiii");
+            return;
+          }
+        });
+
+        // availablePositions.map((x, index) => {
+        //   pos.map((p) => {
+        //     if (JSON.stringify(x) == JSON.stringify(p)) {
+        //       indexes.push(index);
+        //       console.log(x);
+        //     }
+        //   });
+        // });
+      }
+    }
+
     setBoard(newboard);
     setChance(!chance);
 
@@ -262,7 +437,7 @@ function Board() {
     let availablePositions = pieceRules();
 
     if (detail.name === "king") {
-      availablePositions = checkKing(newboard, availablePositions);
+      availablePositions = checkKing(newboard, availablePositions, detail);
     }
 
     newboard[position[0]][position[1]] = {

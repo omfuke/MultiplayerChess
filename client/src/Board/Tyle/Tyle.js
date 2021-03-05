@@ -24,6 +24,7 @@ function Tyle({
 
     if (detail.jump) {
       goToLocation(position);
+
       return;
     }
 
@@ -51,6 +52,7 @@ function Tyle({
             }
           : {}),
         ...(detail.jump && { boxShadow: "inset 0 0 15px #0f0" }),
+        ...(detail.check && { boxShadow: "inset 0 0 15px red" }),
       }}
     >
       <div
