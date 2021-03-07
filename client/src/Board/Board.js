@@ -263,8 +263,6 @@ function Board() {
         })
       );
 
-      console.log(kingLocation, piece2);
-
       const pieces = [];
 
       newboard.map((x, index) =>
@@ -414,7 +412,6 @@ function Board() {
             break;
         }
 
-        console.log(pos);
         pos.map((p) => {
           if (JSON.stringify(p) == JSON.stringify(kingLocation)) {
             newboard[kingLocation[0]][kingLocation[1]] = {
@@ -425,15 +422,6 @@ function Board() {
             return;
           }
         });
-
-        // availablePositions.map((x, index) => {
-        //   pos.map((p) => {
-        //     if (JSON.stringify(x) == JSON.stringify(p)) {
-        //       indexes.push(index);
-        //       console.log(x);
-        //     }
-        //   });
-        // });
       }
     }
     if (
@@ -456,6 +444,7 @@ function Board() {
     }
 
     setBoard(newboard);
+
     setChance(!chance);
 
     return;
@@ -463,10 +452,12 @@ function Board() {
 
   //this function is for toggle off the piece on Click
 
-  const allFalse = () => {
+  const allFalse = (position) => {
     const newboard = board.map(function (arr) {
       return arr.slice();
     });
+
+    setLocation(position);
 
     newboard.map((i, index) =>
       i.map((j, ind) => {
@@ -573,6 +564,7 @@ function Board() {
                 position={[index, ind]}
                 selected={setLocation}
                 allFalse={allFalse}
+                location={location}
                 goToLocation={goToLocation}
                 piece={piece}
               ></Tyle>
@@ -593,22 +585,38 @@ function Board() {
             }}
           >
             <i
-              style={{ marginBottom: "10px", color: "white" }}
+              style={{
+                marginBottom: "10px",
+                color: "white",
+                cursor: "pointer",
+              }}
               onClick={() => promoteWhiteHandler("rook")}
               className="fas fa-chess-rook fa-2x"
             ></i>
             <i
-              style={{ marginBottom: "10px", color: "white" }}
+              style={{
+                marginBottom: "10px",
+                color: "white",
+                cursor: "pointer",
+              }}
               onClick={() => promoteWhiteHandler("queen")}
               className="fas fa-chess-queen fa-2x"
             ></i>
             <i
-              style={{ marginBottom: "10px", color: "white" }}
+              style={{
+                marginBottom: "10px",
+                color: "white",
+                cursor: "pointer",
+              }}
               onClick={() => promoteWhiteHandler("bishop")}
               className="fas fa-chess-bishop fa-2x"
             ></i>
             <i
-              style={{ marginBottom: "10px", color: "white" }}
+              style={{
+                marginBottom: "10px",
+                color: "white",
+                cursor: "pointer",
+              }}
               onClick={() => promoteWhiteHandler("knight")}
               className="fas fa-chess-knight fa-2x"
             ></i>
@@ -628,22 +636,22 @@ function Board() {
             }}
           >
             <i
-              style={{ marginBottom: "10px" }}
+              style={{ marginBottom: "10px", cursor: "pointer" }}
               onClick={() => promoteBlackHandler("rook")}
               className="fas fa-chess-rook fa-2x"
             ></i>
             <i
-              style={{ marginBottom: "10px" }}
+              style={{ marginBottom: "10px", cursor: "pointer" }}
               onClick={() => promoteBlackHandler("queen")}
               className="fas fa-chess-queen fa-2x"
             ></i>
             <i
-              style={{ marginBottom: "10px" }}
+              style={{ marginBottom: "10px", cursor: "pointer" }}
               onClick={() => promoteBlackHandler("bishop")}
               className="fas fa-chess-bishop fa-2x"
             ></i>
             <i
-              style={{ marginBottom: "10px" }}
+              style={{ marginBottom: "10px", cursor: "pointer" }}
               onClick={() => promoteBlackHandler("knight")}
               className="fas fa-chess-knight fa-2x"
             ></i>

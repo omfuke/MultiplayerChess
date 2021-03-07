@@ -10,27 +10,18 @@ function Tyle({
   allFalse,
   goToLocation,
   piece,
+  location,
 }) {
-  // console.log(detail, position);
-
-  // const [click, setClick] = useState(false);
-
   const clickHandler = (checking, detail, position) => {
-    // setClick(!click);
-    // if (click) {
-    //   allFalse();
-    //   return;
-    // }
-
     if (detail.jump) {
       goToLocation(position);
+      console.log(location, position);
 
       return;
     }
 
     if (detail.color === piece) {
-      selected(position);
-      allFalse();
+      allFalse(position);
       //console.log("clickable");
       checking(detail, position);
 
@@ -56,6 +47,7 @@ function Tyle({
       }}
     >
       <div
+        className={detail.transition && "tyleAnimation"}
         onClick={() => clickHandler(checking, detail, position)}
         style={{
           width: "50px",

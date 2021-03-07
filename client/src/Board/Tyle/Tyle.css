@@ -3,3 +3,17 @@
   height: 70px;
   border: 1px solid black;
 }
+
+.tyleAnimation {
+  transition: transform 2s ease-in;
+}
+
+.Tyle .tyleAnimation {
+  animation: left-to-right 2s ease-in forwards;
+}
+
+@keyframes left-to-right {
+  100% {
+    transform: translateY(-120px);
+  }
+}
