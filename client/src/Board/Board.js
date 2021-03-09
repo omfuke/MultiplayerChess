@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Board.css";
 import Tyle from "./Tyle/Tyle";
 import { pawnRules } from "./Rules/Pawn";
@@ -13,6 +13,12 @@ import { RookRules2 } from "./Rules/RookRules2";
 import { QueenRules2 } from "./Rules/QueenRules2";
 import { BishopRules2 } from "./Rules/BishopRules2";
 import { KingRules2 } from "./Rules/KingRules2";
+import { vflip } from "2d-array-rotation";
+
+import { io } from "socket.io-client";
+
+let socket;
+let PORT = "localhost:5000";
 
 function Board() {
   const [board, setBoard] = useState([
@@ -103,9 +109,23 @@ function Board() {
   const [chance, setChance] = useState(false);
   const piece = chance ? "black" : "white";
 
-  if (location) {
-    //console.log(location);
-  }
+  useEffect(() => {
+    socket = io(PORT, {
+      transports: ["websocket"],
+    });
+
+    socket.emit("join");
+    return () => {
+      socket.off();
+    };
+  }, [PORT]);
+
+  useEffect(() => {
+    socket.on("setboard", (board) => {
+      setBoard(board);
+      console.log(board);
+    });
+  }, [setBoard]);
 
   const checkKing = (board, availablePositions, detail) => {
     const color = detail.color === "white" ? "black" : "white";
@@ -275,15 +295,6 @@ function Board() {
               console.log(kingLocation, "hiiiiiiiiiiiiiiii");
             }
           });
-
-          // availablePositions.map((x, index) => {
-          //   pos.map((p) => {
-          //     if (JSON.stringify(x) == JSON.stringify(p)) {
-          //       indexes.push(index);
-          //       console.log(x);
-          //     }
-          //   });
-          // });
         }
       }
 
@@ -358,7 +369,6 @@ function Board() {
             break;
         }
 
-        console.log(pos);
         pos.map((p) => {
           if (JSON.stringify(p) == JSON.stringify(kingLocation)) {
             newboard[kingLocation[0]][kingLocation[1]] = {
@@ -369,15 +379,6 @@ function Board() {
             return;
           }
         });
-
-        // availablePositions.map((x, index) => {
-        //   pos.map((p) => {
-        //     if (JSON.stringify(x) == JSON.stringify(p)) {
-        //       indexes.push(index);
-        //       console.log(x);
-        //     }
-        //   });
-        // });
       }
     }
 
@@ -459,9 +460,11 @@ function Board() {
         }
       })
     );
+    socket.emit("board", newboard);
 
-    setBoard(newboard);
+    // setBoard(newboard);
   };
+
   let tyle;
   return (
     <div
