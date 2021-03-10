@@ -10,6 +10,9 @@ function Tyle({
   allFalse,
   goToLocation,
   piece,
+  chance,
+  playerChance,
+  playerChanceColor,
 }) {
   // console.log(detail, position);
 
@@ -28,7 +31,7 @@ function Tyle({
       return;
     }
 
-    if (detail.color === piece) {
+    if (detail.color === playerChanceColor) {
       selected(position);
       allFalse();
       //console.log("clickable");
@@ -60,7 +63,7 @@ function Tyle({
         style={{
           width: "50px",
           height: "50px",
-          ...(detail.color === piece || detail.jump
+          ...(detail.color === playerChanceColor || detail.jump
             ? { cursor: "pointer" }
             : { cursor: "auto" }),
           display: "flex",
@@ -81,3 +84,4 @@ function Tyle({
 }
 
 export default Tyle;
+//detail.color === piece

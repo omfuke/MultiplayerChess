@@ -8,10 +8,16 @@ io.on("connection", (socket) => {
   socket.on("join", () => {
     console.log("casdonnected");
 
+    // socket.emit("player1", true);
+    socket.broadcast.emit("playerChance", { color: null, value: "false" });
+
     socket.on("board", (newboard) => {
-      console.log(newboard);
       // socket.broadcast.emit("setboard", newboard);
       io.sockets.emit("setboard", newboard);
+    });
+
+    socket.on("chance", (val) => {
+      socket.broadcast.emit("chances", val);
     });
   });
 });

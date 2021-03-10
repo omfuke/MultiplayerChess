@@ -107,6 +107,8 @@ function Board() {
   const [location, setLocation] = useState(null);
 
   const [chance, setChance] = useState(false);
+  const [playerChance, setPlayerChance] = useState(true);
+  const [playerChanceColor, setPlayerChanceColor] = useState("white");
   const piece = chance ? "black" : "white";
 
   useEffect(() => {
@@ -115,6 +117,11 @@ function Board() {
     });
 
     socket.emit("join");
+    socket.on("playerChance", (val) => {
+      setPlayerChance(val.value);
+      setPlayerChanceColor(val.color);
+    });
+
     return () => {
       socket.off();
     };
@@ -125,7 +132,14 @@ function Board() {
       setBoard(board);
       console.log(board);
     });
-  }, [setBoard]);
+  }, [board]);
+
+  useEffect(() => {
+    socket.on("chances", (val) => {
+      setPlayerChanceColor(val.color);
+      setPlayerChance(val.value);
+    });
+  }, [playerChanceColor]);
 
   const checkKing = (board, availablePositions, detail) => {
     const color = detail.color === "white" ? "black" : "white";
@@ -297,9 +311,17 @@ function Board() {
           });
         }
       }
+      socket.emit("board", newboard);
+      // setBoard(newboard);
 
-      setBoard(newboard);
       setChance(!chance);
+      if (playerChanceColor === "white") {
+        socket.emit("chance", { color: "black", value: "true" });
+        setPlayerChanceColor(null);
+      } else {
+        socket.emit("chance", { color: "white", value: "true" });
+        setPlayerChanceColor(null);
+      }
 
       return;
     }
@@ -381,10 +403,16 @@ function Board() {
         });
       }
     }
-
-    setBoard(newboard);
+    socket.emit("board", newboard);
+    // setBoard(newboard);
     setChance(!chance);
-
+    if (playerChanceColor === "white") {
+      socket.emit("chance", { color: "black", value: "true" });
+      setPlayerChanceColor(null);
+    } else {
+      socket.emit("chance", { color: "white", value: "true" });
+      setPlayerChanceColor(null);
+    }
     return;
   };
 
@@ -402,7 +430,8 @@ function Board() {
       })
     );
 
-    setBoard(newboard);
+    socket.emit("board", newboard);
+    // setBoard(newboard);
   };
 
   //this function is for showing available location for move
@@ -503,7 +532,10 @@ function Board() {
                 selected={setLocation}
                 allFalse={allFalse}
                 goToLocation={goToLocation}
+                chance={chance}
                 piece={piece}
+                playerChance={playerChance}
+                playerChanceColor={playerChanceColor}
               ></Tyle>
             );
           });
