@@ -2,23 +2,27 @@ const app = require("express")();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
+let rooms = 0;
+
 io.on("connection", (socket) => {
-  // console.log(socket.id, "conected");
+  console.log(socket.id + "connected");
+  socket.on("create", (data) => {
+    rooms += 1;
+    socket.join(data.room);
+    console.log(data);
+    socket.emit("game", { room: data.room });
+  });
 
-  socket.on("join", () => {
-    console.log("casdonnected");
-
-    // socket.emit("player1", true);
-    socket.broadcast.emit("playerChance", { color: null, value: "false" });
-
-    socket.on("board", (newboard) => {
-      // socket.broadcast.emit("setboard", newboard);
-      io.sockets.emit("setboard", newboard);
-    });
-
-    socket.on("chance", (val) => {
-      socket.broadcast.emit("chances", val);
-    });
+  socket.on("join", (data) => {
+    if (rooms === 1) {
+      rooms += 1;
+      console.log(io.sockets.adapter.rooms.get(data.room).size);
+      socket.join(data);
+      socket.emit("game", { room: data.room + 1 });
+    } else {
+      socket.emit("err", { msg: "cannot join" });
+    }
+    //
   });
 });
 

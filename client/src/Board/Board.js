@@ -13,7 +13,6 @@ import { RookRules2 } from "./Rules/RookRules2";
 import { QueenRules2 } from "./Rules/QueenRules2";
 import { BishopRules2 } from "./Rules/BishopRules2";
 import { KingRules2 } from "./Rules/KingRules2";
-import { vflip } from "2d-array-rotation";
 
 import { io } from "socket.io-client";
 
@@ -104,42 +103,35 @@ function Board() {
     ],
   ]);
 
+  const playHandler = () => {
+    console.log("play game");
+    socket.emit("join", { name: "bop", room: "room0" });
+  };
+
+  const createHandler = () => {
+    console.log("create game");
+    socket.emit("create", { name: "om", room: "room0" });
+  };
+
   const [location, setLocation] = useState(null);
 
   const [chance, setChance] = useState(false);
-  const [playerChance, setPlayerChance] = useState(true);
-  const [playerChanceColor, setPlayerChanceColor] = useState("white");
+
   const piece = chance ? "black" : "white";
 
   useEffect(() => {
-    socket = io(PORT, {
-      transports: ["websocket"],
-    });
-
-    socket.emit("join");
-    socket.on("playerChance", (val) => {
-      setPlayerChance(val.value);
-      setPlayerChanceColor(val.color);
-    });
-
-    return () => {
-      socket.off();
-    };
+    socket = io(PORT, { transports: ["websocket"] });
+    console.log(socket);
   }, [PORT]);
 
   useEffect(() => {
-    socket.on("setboard", (board) => {
-      setBoard(board);
-      console.log(board);
+    socket.on("err", (data) => {
+      alert(data.msg);
     });
-  }, [board]);
-
-  useEffect(() => {
-    socket.on("chances", (val) => {
-      setPlayerChanceColor(val.color);
-      setPlayerChance(val.value);
+    socket.on("game", (data) => {
+      console.log(data);
     });
-  }, [playerChanceColor]);
+  }, []);
 
   const checkKing = (board, availablePositions, detail) => {
     const color = detail.color === "white" ? "black" : "white";
@@ -244,7 +236,7 @@ function Board() {
 
       newboard.map((x, index) =>
         x.map((p, ind) => {
-          if (p.color == piece2 && p.name == "king") {
+          if (p.color === piece2 && p.name === "king") {
             kingLocation = [index, ind];
             return;
           }
@@ -301,7 +293,7 @@ function Board() {
 
           console.log(pos);
           pos.map((p) => {
-            if (JSON.stringify(p) == JSON.stringify(kingLocation)) {
+            if (JSON.stringify(p) === JSON.stringify(kingLocation)) {
               newboard[kingLocation[0]][kingLocation[1]] = {
                 ...newboard[kingLocation[0]][kingLocation[1]],
                 check: true,
@@ -311,17 +303,9 @@ function Board() {
           });
         }
       }
-      socket.emit("board", newboard);
-      // setBoard(newboard);
-
+      // socket.emit("board", newboard);
+      setBoard(newboard);
       setChance(!chance);
-      if (playerChanceColor === "white") {
-        socket.emit("chance", { color: "black", value: "true" });
-        setPlayerChanceColor(null);
-      } else {
-        socket.emit("chance", { color: "white", value: "true" });
-        setPlayerChanceColor(null);
-      }
 
       return;
     }
@@ -336,7 +320,7 @@ function Board() {
 
     newboard.map((x, index) =>
       x.map((p, ind) => {
-        if (p.color == piece2 && p.name == "king") {
+        if (p.color === piece2 && p.name === "king") {
           kingLocation = [index, ind];
           return;
         }
@@ -392,7 +376,7 @@ function Board() {
         }
 
         pos.map((p) => {
-          if (JSON.stringify(p) == JSON.stringify(kingLocation)) {
+          if (JSON.stringify(p) === JSON.stringify(kingLocation)) {
             newboard[kingLocation[0]][kingLocation[1]] = {
               ...newboard[kingLocation[0]][kingLocation[1]],
               check: true,
@@ -403,16 +387,10 @@ function Board() {
         });
       }
     }
-    socket.emit("board", newboard);
-    // setBoard(newboard);
+    // socket.emit("board", newboard);
+    setBoard(newboard);
     setChance(!chance);
-    if (playerChanceColor === "white") {
-      socket.emit("chance", { color: "black", value: "true" });
-      setPlayerChanceColor(null);
-    } else {
-      socket.emit("chance", { color: "white", value: "true" });
-      setPlayerChanceColor(null);
-    }
+
     return;
   };
 
@@ -430,8 +408,7 @@ function Board() {
       })
     );
 
-    socket.emit("board", newboard);
-    // setBoard(newboard);
+    setBoard(newboard);
   };
 
   //this function is for showing available location for move
@@ -489,59 +466,81 @@ function Board() {
         }
       })
     );
-    socket.emit("board", newboard);
 
-    // setBoard(newboard);
+    setBoard(newboard);
   };
 
   let tyle;
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100vw",
-        height: "100vh",
-      }}
-    >
-      <div className="Board">
-        {board.map((i, index) => {
-          return i.map((j, ind) => {
-            if (index % 2 === 0) {
-              if (ind % 2 === 0) {
-                tyle = true;
-              } else {
-                tyle = false;
-              }
-            } else {
-              if (ind % 2 === 0) {
-                tyle = false;
-              } else {
-                tyle = true;
-              }
-            }
-
-            return (
-              <Tyle
-                key={[index, ind]}
-                checking={checking}
-                tyle={tyle}
-                detail={j}
-                position={[index, ind]}
-                selected={setLocation}
-                allFalse={allFalse}
-                goToLocation={goToLocation}
-                chance={chance}
-                piece={piece}
-                playerChance={playerChance}
-                playerChanceColor={playerChanceColor}
-              ></Tyle>
-            );
-          });
-        })}
+    <>
+      <div
+        style={{
+          backgroundColor: "lightgreen",
+          width: "100px",
+          textAlign: "center",
+          cursor: "pointer",
+        }}
+        onClick={() => createHandler()}
+      >
+        create
       </div>
-    </div>
+      <div
+        style={{
+          backgroundColor: "tomato",
+          width: "100px",
+          textAlign: "center",
+          cursor: "pointer",
+        }}
+        onClick={() => playHandler()}
+      >
+        Play
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100vw",
+          height: "100vh",
+        }}
+      >
+        <div className="Board">
+          {board.map((i, index) => {
+            return i.map((j, ind) => {
+              if (index % 2 === 0) {
+                if (ind % 2 === 0) {
+                  tyle = true;
+                } else {
+                  tyle = false;
+                }
+              } else {
+                if (ind % 2 === 0) {
+                  tyle = false;
+                } else {
+                  tyle = true;
+                }
+              }
+
+              return (
+                <Tyle
+                  key={[index, ind]}
+                  checking={checking}
+                  tyle={tyle}
+                  detail={j}
+                  position={[index, ind]}
+                  selected={setLocation}
+                  allFalse={allFalse}
+                  goToLocation={goToLocation}
+                  chance={chance}
+                  piece={piece}
+                ></Tyle>
+              );
+            });
+          })}
+        </div>
+      </div>
+    </>
   );
 }
 
