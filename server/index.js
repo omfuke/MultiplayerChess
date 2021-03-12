@@ -19,10 +19,23 @@ io.on("connection", (socket) => {
       console.log(io.sockets.adapter.rooms.get(data.room).size);
       socket.join(data);
       socket.emit("game", { room: data.room + 1 });
+      socket.broadcast.to(data.room).emit("player1", { msg: "player2 joined" });
+      socket.emit("player2", true);
     } else {
       socket.emit("err", { msg: "cannot join" });
     }
     //
+  });
+
+  socket.on("selected", (data) => {
+    console.log(data.board);
+    socket.broadcast.emit("select", data);
+    socket.emit("chance", true);
+    // socket.broadcast.to(data.room).emit("select", data);
+  });
+
+  socket.on("playTurn", (data) => {
+    socket.broadcast.to(data.room).emit("playedTurn", data);
   });
 });
 

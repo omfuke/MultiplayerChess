@@ -118,6 +118,7 @@ function Board() {
   const [chance, setChance] = useState(false);
 
   const piece = chance ? "black" : "white";
+  const [playerChance, setPlayerChance] = useState(false);
 
   useEffect(() => {
     socket = io(PORT, { transports: ["websocket"] });
@@ -128,8 +129,28 @@ function Board() {
     socket.on("err", (data) => {
       alert(data.msg);
     });
+
+    socket.on("player1", (data) => {
+      alert(data.msg);
+    });
+
+    socket.on("player2", (val) => {
+      setPlayerChance(val);
+    });
+
     socket.on("game", (data) => {
       console.log(data);
+    });
+
+    socket.on("select", (data) => {
+      console.log(data);
+      setBoard(data.board);
+      setPlayerChance(data.playerChance);
+      setChance(data.chance);
+    });
+
+    socket.on("chance", (val) => {
+      setPlayerChance(val);
     });
   }, []);
 
@@ -304,8 +325,13 @@ function Board() {
         }
       }
       // socket.emit("board", newboard);
+      socket.emit("selected", {
+        board: newboard,
+        room: "room0",
+        playerChance: false,
+        chance: !chance,
+      });
       setBoard(newboard);
-      setChance(!chance);
 
       return;
     }
@@ -387,9 +413,13 @@ function Board() {
         });
       }
     }
-    // socket.emit("board", newboard);
+    socket.emit("selected", {
+      board: newboard,
+      room: "room0",
+      playerChance: false,
+      chance: !chance,
+    });
     setBoard(newboard);
-    setChance(!chance);
 
     return;
   };
@@ -505,7 +535,10 @@ function Board() {
           height: "100vh",
         }}
       >
-        <div className="Board">
+        <div
+          className="Board"
+          style={{ ...(playerChance && { pointerEvents: "none" }) }}
+        >
           {board.map((i, index) => {
             return i.map((j, ind) => {
               if (index % 2 === 0) {
