@@ -11,6 +11,8 @@ function Tyle({
   goToLocation,
   piece,
   chance,
+  promoteWhite,
+  promoteBlack,
 }) {
   // console.log(detail, position);
 
@@ -18,6 +20,9 @@ function Tyle({
 
   const clickHandler = (checking, detail, position) => {
     if (detail.jump) {
+      if (detail.name === "king") {
+        alert("game over");
+      }
       goToLocation(position);
 
       return;
@@ -48,6 +53,8 @@ function Tyle({
           : {}),
         ...(detail.jump && { boxShadow: "inset 0 0 15px #0f0" }),
         ...(detail.check && { boxShadow: "inset 0 0 15px red" }),
+        ...(promoteWhite && { pointerEvents: "none" }),
+        ...(promoteBlack && { pointerEvents: "none" }),
       }}
     >
       <div

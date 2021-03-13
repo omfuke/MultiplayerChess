@@ -103,6 +103,211 @@ function Board() {
     ],
   ]);
 
+  const [promoteWhite, setPromoteWhite] = useState(false);
+
+  const [promoteBlack, setPromoteBlack] = useState(false);
+  const [promoteWhiteLocation, setPromoteWhiteLocation] = useState(null);
+
+  const [promoteBlackLocation, setPromoteBlackLocation] = useState(null);
+
+  const promoteWhiteHandler = (piec) => {
+    const newboard = board.map(function (arr) {
+      return arr.slice();
+    });
+
+    newboard[promoteWhiteLocation[0]][promoteWhiteLocation[1]] = {
+      name: piec,
+      color: "white",
+      selected: false,
+      jump: false,
+    };
+    setPromoteWhite(false);
+    setPromoteWhiteLocation(null);
+    console.log(piece);
+    const piece2 = chance ? "white" : "black";
+
+    let kingLocation;
+
+    newboard.map((x, index) =>
+      x.map((p, ind) => {
+        if (p.color === piece2 && p.name === "king") {
+          kingLocation = [index, ind];
+          return;
+        }
+      })
+    );
+
+    // console.log(kingLocation, piece2);
+
+    const pieces = [];
+
+    newboard.map((x, index) =>
+      x.map((p, ind) => {
+        if (p.color === piece) {
+          pieces.push({ ...p, position: [index, ind] });
+        }
+      })
+    );
+
+    for (const key in pieces) {
+      if (Object.hasOwnProperty.call(pieces, key)) {
+        const element = pieces[key];
+        // console.log(element);
+        let pos;
+
+        switch (element.name) {
+          case "pawn":
+            pos = pawnRules(element.position, element, newboard);
+            break;
+          case "rook":
+            pos = rookRules(element.position, element, newboard);
+            break;
+
+          case "knight":
+            pos = KnightRules(element.position, element, newboard);
+            break;
+
+          case "queen":
+            pos = QueenRules(element.position, element, newboard);
+            break;
+
+          case "king":
+            pos = KingRules(element.position, element, newboard);
+            break;
+
+          case "bishop":
+            pos = BishopRules(element.position, element, newboard);
+
+            break;
+
+          default:
+            pos = [];
+            break;
+        }
+
+        console.log(pos);
+        pos.map((p) => {
+          if (JSON.stringify(p) === JSON.stringify(kingLocation)) {
+            newboard[kingLocation[0]][kingLocation[1]] = {
+              ...newboard[kingLocation[0]][kingLocation[1]],
+              check: true,
+            };
+            console.log(kingLocation, "hiiiiiiiiiiiiiiii");
+          }
+        });
+      }
+    }
+
+    socket.emit("selected", {
+      board: newboard,
+      room: "room0",
+      playerChance: false,
+      chance: !chance,
+    });
+    setBoard(newboard);
+    return;
+  };
+
+  const promoteBlackHandler = (piec) => {
+    const newboard = board.map(function (arr) {
+      return arr.slice();
+    });
+
+    newboard[promoteBlackLocation[0]][promoteBlackLocation[1]] = {
+      name: piec,
+      color: "black",
+      selected: false,
+      jump: false,
+    };
+
+    setPromoteBlack(false);
+    setPromoteBlackLocation(null);
+
+    console.log(piece);
+    const piece2 = chance ? "white" : "black";
+
+    let kingLocation;
+
+    newboard.map((x, index) =>
+      x.map((p, ind) => {
+        if (p.color === piece2 && p.name === "king") {
+          kingLocation = [index, ind];
+          return;
+        }
+      })
+    );
+
+    // console.log(kingLocation, piece2);
+
+    const pieces = [];
+
+    newboard.map((x, index) =>
+      x.map((p, ind) => {
+        if (p.color === piece) {
+          pieces.push({ ...p, position: [index, ind] });
+        }
+      })
+    );
+
+    for (const key in pieces) {
+      if (Object.hasOwnProperty.call(pieces, key)) {
+        const element = pieces[key];
+        // console.log(element);
+        let pos;
+
+        switch (element.name) {
+          case "pawn":
+            pos = pawnRules(element.position, element, newboard);
+            break;
+          case "rook":
+            pos = rookRules(element.position, element, newboard);
+            break;
+
+          case "knight":
+            pos = KnightRules(element.position, element, newboard);
+            break;
+
+          case "queen":
+            pos = QueenRules(element.position, element, newboard);
+            break;
+
+          case "king":
+            pos = KingRules(element.position, element, newboard);
+            break;
+
+          case "bishop":
+            pos = BishopRules(element.position, element, newboard);
+
+            break;
+
+          default:
+            pos = [];
+            break;
+        }
+
+        console.log(pos);
+        pos.map((p) => {
+          if (JSON.stringify(p) === JSON.stringify(kingLocation)) {
+            newboard[kingLocation[0]][kingLocation[1]] = {
+              ...newboard[kingLocation[0]][kingLocation[1]],
+              check: true,
+            };
+            console.log(kingLocation, "hiiiiiiiiiiiiiiii");
+          }
+        });
+      }
+    }
+
+    socket.emit("selected", {
+      board: newboard,
+      room: "room0",
+      playerChance: false,
+      chance: !chance,
+    });
+    setBoard(newboard);
+    return;
+  };
+
   const playHandler = () => {
     console.log("play game");
     socket.emit("join", { name: "bop", room: "room0" });
@@ -121,8 +326,13 @@ function Board() {
   const [playerChance, setPlayerChance] = useState(false);
 
   useEffect(() => {
-    socket = io(PORT, { transports: ["websocket"] });
+    socket = io(PORT, { transports: ["websocket"], upgrade: false });
     console.log(socket);
+
+    return () => {
+      socket.off();
+      socket.emit("disconnect");
+    };
   }, [PORT]);
 
   useEffect(() => {
@@ -264,7 +474,7 @@ function Board() {
         })
       );
 
-      console.log(kingLocation, piece2);
+      // console.log(kingLocation, piece2);
 
       const pieces = [];
 
@@ -324,6 +534,31 @@ function Board() {
           });
         }
       }
+      if (
+        board[location[0]][location[1]].name === "pawn" &&
+        board[location[0]][location[1]].color === "white"
+      ) {
+        if (position[0] === 0) {
+          setPromoteWhite(true);
+          setPromoteWhiteLocation([position[0], position[1]]);
+          setBoard(newboard);
+
+          return;
+        }
+      }
+      if (
+        board[location[0]][location[1]].name === "pawn" &&
+        board[location[0]][location[1]].color === "black"
+      ) {
+        if (position[0] === 7) {
+          setPromoteBlack(true);
+          setPromoteBlackLocation([position[0], position[1]]);
+          setBoard(newboard);
+
+          return;
+        }
+      }
+
       // socket.emit("board", newboard);
       socket.emit("selected", {
         board: newboard,
@@ -411,6 +646,31 @@ function Board() {
             return;
           }
         });
+      }
+    }
+
+    if (
+      board[location[0]][location[1]].name === "pawn" &&
+      board[location[0]][location[1]].color === "white"
+    ) {
+      if (position[0] === 0) {
+        setPromoteWhite(true);
+        setPromoteWhiteLocation([position[0], position[1]]);
+        setBoard(newboard);
+
+        return;
+      }
+    }
+    if (
+      board[location[0]][location[1]].name === "pawn" &&
+      board[location[0]][location[1]].color === "black"
+    ) {
+      if (position[0] === 7) {
+        setPromoteBlack(true);
+        setPromoteBlackLocation([position[0], position[1]]);
+        setBoard(newboard);
+
+        return;
       }
     }
     socket.emit("selected", {
@@ -537,7 +797,9 @@ function Board() {
       >
         <div
           className="Board"
-          style={{ ...(playerChance && { pointerEvents: "none" }) }}
+          style={{
+            ...(playerChance && { pointerEvents: "none" }),
+          }}
         >
           {board.map((i, index) => {
             return i.map((j, ind) => {
@@ -567,11 +829,99 @@ function Board() {
                   goToLocation={goToLocation}
                   chance={chance}
                   piece={piece}
+                  promoteWhite={promoteWhite}
+                  promoteBlack={promoteBlack}
                 ></Tyle>
               );
             });
           })}
         </div>
+        {promoteWhite && (
+          <div>
+            <div
+              style={{
+                width: "50px",
+                backgroundColor: "black",
+                border: "1px solid black",
+                display: "flex",
+                flexDirection: "column",
+                padding: "5px",
+              }}
+            >
+              <i
+                style={{
+                  marginBottom: "10px",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+                onClick={() => promoteWhiteHandler("rook")}
+                className="fas fa-chess-rook fa-2x"
+              ></i>
+              <i
+                style={{
+                  marginBottom: "10px",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+                onClick={() => promoteWhiteHandler("queen")}
+                className="fas fa-chess-queen fa-2x"
+              ></i>
+              <i
+                style={{
+                  marginBottom: "10px",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+                onClick={() => promoteWhiteHandler("bishop")}
+                className="fas fa-chess-bishop fa-2x"
+              ></i>
+              <i
+                style={{
+                  marginBottom: "10px",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+                onClick={() => promoteWhiteHandler("knight")}
+                className="fas fa-chess-knight fa-2x"
+              ></i>
+            </div>
+          </div>
+        )}
+        {promoteBlack && (
+          <div>
+            <div
+              style={{
+                width: "50px",
+
+                border: "1px solid black",
+                display: "flex",
+                flexDirection: "column",
+                padding: "5px",
+              }}
+            >
+              <i
+                style={{ marginBottom: "10px", cursor: "pointer" }}
+                onClick={() => promoteBlackHandler("rook")}
+                className="fas fa-chess-rook fa-2x"
+              ></i>
+              <i
+                style={{ marginBottom: "10px", cursor: "pointer" }}
+                onClick={() => promoteBlackHandler("queen")}
+                className="fas fa-chess-queen fa-2x"
+              ></i>
+              <i
+                style={{ marginBottom: "10px", cursor: "pointer" }}
+                onClick={() => promoteBlackHandler("bishop")}
+                className="fas fa-chess-bishop fa-2x"
+              ></i>
+              <i
+                style={{ marginBottom: "10px", cursor: "pointer" }}
+                onClick={() => promoteBlackHandler("knight")}
+                className="fas fa-chess-knight fa-2x"
+              ></i>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

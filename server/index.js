@@ -37,6 +37,10 @@ io.on("connection", (socket) => {
   socket.on("playTurn", (data) => {
     socket.broadcast.to(data.room).emit("playedTurn", data);
   });
+
+  socket.on("disconnect", () => {
+    socket.removeAllListeners();
+  });
 });
 
 http.listen(5000, () => {
