@@ -14,12 +14,17 @@ import { QueenRules2 } from "./Rules/QueenRules2";
 import { BishopRules2 } from "./Rules/BishopRules2";
 import { KingRules2 } from "./Rules/KingRules2";
 
+import Join from "../Join";
+
 import { io } from "socket.io-client";
+import { Redirect } from "react-router";
+
+const generate = Math.random().toString(36).substring(2, 13);
 
 let socket;
 let PORT = "localhost:5000";
 
-function Board() {
+function Board({ history }) {
   const [board, setBoard] = useState([
     [
       { name: "rook", color: "black", selected: false, jump: false },
@@ -102,6 +107,13 @@ function Board() {
       { name: "rook", color: "white", selected: false, jump: false },
     ],
   ]);
+
+  const [gameId, setGameId] = useState("");
+
+  const [game, setGame] = useState(true);
+  const [player1Name, setPlayer1Name] = useState("");
+  const [player2Name, setPlayer2Name] = useState("");
+  const [loading, setLoading] = useState(null);
 
   const [promoteWhite, setPromoteWhite] = useState(false);
 
@@ -200,7 +212,7 @@ function Board() {
 
     socket.emit("selected", {
       board: newboard,
-      room: "room0",
+      room: gameId,
       playerChance: false,
       chance: !chance,
     });
@@ -300,7 +312,7 @@ function Board() {
 
     socket.emit("selected", {
       board: newboard,
-      room: "room0",
+      room: gameId,
       playerChance: false,
       chance: !chance,
     });
@@ -308,14 +320,20 @@ function Board() {
     return;
   };
 
-  const playHandler = () => {
+  const playHandler = (id) => {
+    setGameId(id);
     console.log("play game");
-    socket.emit("join", { name: "bop", room: "room0" });
+    socket.emit("join", { name: player2Name, room: id });
+
+    setGame(false);
   };
 
   const createHandler = () => {
     console.log("create game");
-    socket.emit("create", { name: "om", room: "room0" });
+    socket.emit("create", { name: player1Name, room: generate });
+
+    setGame(false);
+    setLoading(true);
   };
 
   const [location, setLocation] = useState(null);
@@ -331,17 +349,22 @@ function Board() {
 
     return () => {
       socket.off();
-      socket.emit("disconnect");
     };
   }, [PORT]);
 
   useEffect(() => {
     socket.on("err", (data) => {
       alert(data.msg);
+      window.location.reload();
+      // setcJoin(true);
+
+      return;
     });
 
     socket.on("player1", (data) => {
-      alert(data.msg);
+      setGameId(data.room);
+      setLoading(false);
+      setPlayer2Name(data.opponent);
     });
 
     socket.on("player2", (val) => {
@@ -353,6 +376,7 @@ function Board() {
     });
 
     socket.on("select", (data) => {
+      console.log(gameId);
       console.log(data);
       setBoard(data.board);
       setPlayerChance(data.playerChance);
@@ -562,7 +586,7 @@ function Board() {
       // socket.emit("board", newboard);
       socket.emit("selected", {
         board: newboard,
-        room: "room0",
+        room: gameId,
         playerChance: false,
         chance: !chance,
       });
@@ -675,7 +699,7 @@ function Board() {
     }
     socket.emit("selected", {
       board: newboard,
-      room: "room0",
+      room: gameId,
       playerChance: false,
       chance: !chance,
     });
@@ -761,31 +785,30 @@ function Board() {
   };
 
   let tyle;
+  if (game) {
+    return (
+      <Join
+        create={createHandler}
+        join={playHandler}
+        player1={setPlayer1Name}
+        player2={setPlayer2Name}
+      />
+    );
+  }
+
+  if (loading) {
+    return (
+      <div>
+        {" "}
+        <h1>hello {player1Name}</h1>
+        <p>Game id: {generate}</p>
+        wait for player 2
+      </div>
+    );
+  }
+
   return (
     <>
-      <div
-        style={{
-          backgroundColor: "lightgreen",
-          width: "100px",
-          textAlign: "center",
-          cursor: "pointer",
-        }}
-        onClick={() => createHandler()}
-      >
-        create
-      </div>
-      <div
-        style={{
-          backgroundColor: "tomato",
-          width: "100px",
-          textAlign: "center",
-          cursor: "pointer",
-        }}
-        onClick={() => playHandler()}
-      >
-        Play
-      </div>
-
       <div
         style={{
           display: "flex",
@@ -836,6 +859,7 @@ function Board() {
             });
           })}
         </div>
+
         {promoteWhite && (
           <div>
             <div

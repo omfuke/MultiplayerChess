@@ -14,22 +14,35 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join", (data) => {
-    if (rooms === 1) {
-      rooms += 1;
-      console.log(io.sockets.adapter.rooms.get(data.room).size);
-      socket.join(data);
-      socket.emit("game", { room: data.room + 1 });
-      socket.broadcast.to(data.room).emit("player1", { msg: "player2 joined" });
-      socket.emit("player2", true);
+    if (io.sockets.adapter.rooms.get(data.room)) {
+      let rom = io.sockets.adapter.rooms.get(data.room).size;
+      if (rom === 1) {
+        console.log(io.sockets.adapter.rooms.get(data.room).size);
+        socket.join(data.room);
+        console.log(data);
+        console.log(io.sockets.adapter.rooms.get(data.room));
+        socket.emit("game", { room: data.room + 1 });
+
+        socket.broadcast.to(data.room).emit("player1", {
+          msg: "player2 joined",
+          opponent: data.name,
+          room: data.room,
+        });
+
+        socket.emit("player2", true);
+      } else {
+        socket.emit("err", { msg: "cannot join" });
+      }
     } else {
       socket.emit("err", { msg: "cannot join" });
     }
+
     //
   });
 
   socket.on("selected", (data) => {
-    console.log(data.board);
-    socket.broadcast.emit("select", data);
+    console.log(data.room);
+    socket.broadcast.to(data.room).emit("select", data);
     socket.emit("chance", true);
     // socket.broadcast.to(data.room).emit("select", data);
   });
@@ -39,7 +52,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    socket.removeAllListeners();
+    console.log("user left");
   });
 });
 
