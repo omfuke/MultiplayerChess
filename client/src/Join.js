@@ -14,22 +14,38 @@ const Join = ({ history, create, join, player1, player2 }) => {
   };
   return (
     <div className="background">
-      <input type="text" onChange={(e) => player1(e.target.value)} />
-      <div className="create" onClick={createHandler}>
+      <div
+        className="create"
+        style={{
+          marginBottom: "2em",
+          border: "1px solid white",
+          padding: "1em",
+        }}
+        onClick={createHandler}
+      >
         Create Game
       </div>
-      <input type="text" onChange={(e) => player2(e.target.value)} />
-      <input type="text" onChange={(e) => setGame(e.target.value)} />
       <div
-        onChange={(e) => setGame(e.target.value)}
-        onClick={joinHandler}
         style={{
-          width: "100px",
-          backgroundColor: "lightblue",
-          textAlign: "center",
+          border: "2px solid white",
+          padding: "1em",
+          borderRadius: "2%",
         }}
       >
-        Join Game
+        <input
+          placeholder="room Id"
+          type="text"
+          style={{ width: "256px", height: "30px", marginBottom: "1em" }}
+          onChange={(e) => setGame(e.target.value)}
+        />
+
+        <div
+          className="create"
+          onChange={(e) => setGame(e.target.value)}
+          onClick={joinHandler}
+        >
+          Join Game
+        </div>
       </div>
     </div>
   );

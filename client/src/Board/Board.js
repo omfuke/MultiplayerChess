@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Board.css";
 import Tyle from "./Tyle/Tyle";
 import { pawnRules } from "./Rules/Pawn";
@@ -109,7 +109,7 @@ function Board({ history }) {
   ]);
 
   const [gameId, setGameId] = useState("");
-
+  const [yourPiece, setYourPiece] = useState(null);
   const [game, setGame] = useState(true);
   const [player1Name, setPlayer1Name] = useState("");
   const [player2Name, setPlayer2Name] = useState("");
@@ -324,14 +324,14 @@ function Board({ history }) {
     setGameId(id);
     console.log("play game");
     socket.emit("join", { name: player2Name, room: id });
-
+    setYourPiece(false);
     setGame(false);
   };
 
   const createHandler = () => {
     console.log("create game");
     socket.emit("create", { name: player1Name, room: generate });
-
+    setYourPiece(true);
     setGame(false);
     setLoading(true);
   };
@@ -798,17 +798,29 @@ function Board({ history }) {
 
   if (loading) {
     return (
-      <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: "black",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100vw",
+          height: "100vh",
+        }}
+      >
         {" "}
-        <h1>hello {player1Name}</h1>
-        <p>Game id: {generate}</p>
-        wait for player 2
+        <p className="text">Game-id: {generate}</p>
+        <p className="text">Wait for your friend to Join</p>
       </div>
     );
   }
+  console.log(playerChance);
 
   return (
     <>
+      {playerChance ? <p>opponent turn</p> : <p>your turn</p>}
+      {yourPiece ? <p>you are white</p> : <p>you are black</p>}
       <div
         style={{
           display: "flex",

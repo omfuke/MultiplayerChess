@@ -4,3 +4,12 @@
   width: 562px;
   border: 1px solid black;
 }
+
+.text{
+  color: white;
+   
+    
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
