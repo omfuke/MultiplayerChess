@@ -815,12 +815,75 @@ function Board({ history }) {
       </div>
     );
   }
-  console.log(playerChance);
 
   return (
-    <>
-      {playerChance ? <p>opponent turn</p> : <p>your turn</p>}
-      {yourPiece ? <p>you are white</p> : <p>you are black</p>}
+    <div className="main-board">
+      <div
+        style={{ display: "flex", justifyContent: "center", marginBottom: "0" }}
+      >
+        {playerChance ? (
+          <p
+            className="text"
+            style={{
+              display: "inline",
+              backgroundColor: "tomato",
+              paddingLeft: "1em",
+              paddingRight: "1em",
+              border: "1px solid black",
+              marginRight: "2em",
+              paddingTop: "0.2em",
+              paddingBottom: "0.2em",
+            }}
+          >
+            opponent turn
+          </p>
+        ) : (
+          <p
+            className="text"
+            style={{
+              display: "inline",
+              backgroundColor: "green",
+              paddingLeft: "1em",
+              paddingRight: "1em",
+              paddingTop: "0.2em",
+              paddingBottom: "0.2em",
+              border: "1px solid black",
+              marginRight: "2em",
+            }}
+          >
+            your turn
+          </p>
+        )}
+        {yourPiece ? (
+          <p
+            className="text"
+            style={{
+              display: "inline",
+              backgroundColor: "black",
+              paddingLeft: "1em",
+              paddingTop: "0.2em",
+              paddingBottom: "0.2em",
+              paddingRight: "1em",
+            }}
+          >
+            your piece: white
+          </p>
+        ) : (
+          <p
+            className="text"
+            style={{
+              display: "inline",
+              backgroundColor: "black",
+              paddingLeft: "1em",
+              paddingTop: "0.2em",
+              paddingBottom: "0.2em",
+              paddingRight: "1em",
+            }}
+          >
+            your piece: black
+          </p>
+        )}
+      </div>
       <div
         style={{
           display: "flex",
@@ -959,7 +1022,7 @@ function Board({ history }) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

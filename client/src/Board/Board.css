@@ -13,3 +13,13 @@
     font-size: 20px;
     letter-spacing: 1px;
 }
+.main-board{
+  background-color: black;
+  background: url('../mona-eendra-vC8wj_Kphak-unsplash.jpg') no-repeat center center fixed;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+body{
+  overflow: hidden;
+}
