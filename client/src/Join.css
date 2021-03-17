@@ -1,0 +1,34 @@
+
+.background{
+    background: url('./join.jpg') no-repeat center center fixed;
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.create{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: tomato;
+    
+    width: 256px;
+    height: 56px;
+    
+    color: white;
+   
+    
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+   
+}
+
+input:focus{
+    outline-style: none
+}

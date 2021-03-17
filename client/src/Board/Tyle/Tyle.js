@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { Socket } from "socket.io-client";
 import "./Tyle.css";
 
 function Tyle({
@@ -10,18 +11,31 @@ function Tyle({
   allFalse,
   goToLocation,
   piece,
-  location,
+  chance,
+  promoteWhite,
+  promoteBlack,
+  popup,
+  res,
 }) {
+  // console.log(detail, position);
+
+  // const [click, setClick] = useState(false);
+
   const clickHandler = (checking, detail, position) => {
     if (detail.jump) {
+      if (detail.name === "king") {
+        res();
+        return;
+        // popup(true);
+      }
       goToLocation(position);
-      console.log(location, position);
 
       return;
     }
 
     if (detail.color === piece) {
-      allFalse(position);
+      selected(position);
+      allFalse();
       //console.log("clickable");
       checking(detail, position);
 
@@ -44,10 +58,11 @@ function Tyle({
           : {}),
         ...(detail.jump && { boxShadow: "inset 0 0 15px #0f0" }),
         ...(detail.check && { boxShadow: "inset 0 0 15px red" }),
+        ...(promoteWhite && { pointerEvents: "none" }),
+        ...(promoteBlack && { pointerEvents: "none" }),
       }}
     >
       <div
-        className={detail.transition && "tyleAnimation"}
         onClick={() => clickHandler(checking, detail, position)}
         style={{
           width: "50px",
@@ -73,3 +88,5 @@ function Tyle({
 }
 
 export default Tyle;
+//detail.color === piece
+

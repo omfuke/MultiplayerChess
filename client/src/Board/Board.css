@@ -4,3 +4,23 @@
   width: 562px;
   border: 1px solid black;
 }
+
+.text{
+  color: white;
+   
+    
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+.main-board{
+  background-color: black;
+  background: url('../mona-eendra-vC8wj_Kphak-unsplash.jpg') no-repeat center center fixed;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+body{
+  overflow: hidden;
+}
+
