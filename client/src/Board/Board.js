@@ -22,7 +22,7 @@ import { Redirect } from "react-router";
 const generate = Math.random().toString(36).substring(2, 13);
 
 let socket;
-let PORT = "localhost:5000";
+let PORT = "wss://chessmultiplayer.herokuapp.com/";
 
 function Board({ history }) {
   const [board, setBoard] = useState([
@@ -139,7 +139,7 @@ function Board({ history }) {
     };
     setPromoteWhite(false);
     setPromoteWhiteLocation(null);
-    console.log(piece);
+
     const piece2 = chance ? "white" : "black";
 
     let kingLocation;
@@ -201,14 +201,12 @@ function Board({ history }) {
             break;
         }
 
-        console.log(pos);
         pos.map((p) => {
           if (JSON.stringify(p) === JSON.stringify(kingLocation)) {
             newboard[kingLocation[0]][kingLocation[1]] = {
               ...newboard[kingLocation[0]][kingLocation[1]],
               check: true,
             };
-            console.log(kingLocation, "hiiiiiiiiiiiiiiii");
           }
         });
       }
@@ -239,7 +237,6 @@ function Board({ history }) {
     setPromoteBlack(false);
     setPromoteBlackLocation(null);
 
-    console.log(piece);
     const piece2 = chance ? "white" : "black";
 
     let kingLocation;
@@ -301,14 +298,12 @@ function Board({ history }) {
             break;
         }
 
-        console.log(pos);
         pos.map((p) => {
           if (JSON.stringify(p) === JSON.stringify(kingLocation)) {
             newboard[kingLocation[0]][kingLocation[1]] = {
               ...newboard[kingLocation[0]][kingLocation[1]],
               check: true,
             };
-            console.log(kingLocation, "hiiiiiiiiiiiiiiii");
           }
         });
       }
@@ -326,14 +321,13 @@ function Board({ history }) {
 
   const playHandler = (id) => {
     setGameId(id);
-    console.log("play game");
+
     socket.emit("join", { name: player2Name, room: id });
     setYourPiece(false);
     setGame(false);
   };
 
   const createHandler = () => {
-    console.log("create game");
     socket.emit("create", { name: player1Name, room: generate });
     setYourPiece(true);
     setGame(false);
@@ -349,7 +343,6 @@ function Board({ history }) {
 
   useEffect(() => {
     socket = io(PORT, { transports: ["websocket"], upgrade: false });
-    console.log(socket);
 
     return () => {
       socket.off();
@@ -379,13 +372,9 @@ function Board({ history }) {
       setPopUp(true);
     });
 
-    socket.on("game", (data) => {
-      console.log(data);
-    });
+    socket.on("game", (data) => {});
 
     socket.on("select", (data) => {
-      console.log(gameId);
-      console.log(data);
       setBoard(data.board);
       setPlayerChance(data.playerChance);
       setChance(data.chance);
@@ -444,12 +433,10 @@ function Board({ history }) {
             break;
         }
 
-        console.log(pos);
         availablePositions.map((x, index) => {
           pos.map((p) => {
             if (JSON.stringify(x) == JSON.stringify(p)) {
               indexes.push(index);
-              console.log(x);
             }
           });
         });
@@ -460,11 +447,7 @@ function Board({ history }) {
     const arrayWithValuesRemoved = availablePositions.filter(
       (value, i) => !indexSet.has(i)
     );
-    console.log(arrayWithValuesRemoved);
 
-    console.log(indexes);
-    // console.log(pieces);
-    console.log(availablePositions);
     return arrayWithValuesRemoved;
   };
 
@@ -554,14 +537,12 @@ function Board({ history }) {
               break;
           }
 
-          console.log(pos);
           pos.map((p) => {
             if (JSON.stringify(p) === JSON.stringify(kingLocation)) {
               newboard[kingLocation[0]][kingLocation[1]] = {
                 ...newboard[kingLocation[0]][kingLocation[1]],
                 check: true,
               };
-              console.log(kingLocation, "hiiiiiiiiiiiiiiii");
             }
           });
         }
@@ -620,8 +601,6 @@ function Board({ history }) {
       })
     );
 
-    console.log(kingLocation, piece2);
-
     const pieces = [];
 
     newboard.map((x, index) =>
@@ -674,7 +653,7 @@ function Board({ history }) {
               ...newboard[kingLocation[0]][kingLocation[1]],
               check: true,
             };
-            console.log(kingLocation, "hiiiiiiiiiiiiiiii");
+
             return;
           }
         });
@@ -736,8 +715,6 @@ function Board({ history }) {
   //this function is for showing available location for move
 
   const checking = (detail, position) => {
-    console.log(position, detail);
-
     const newboard = board.map(function (arr) {
       return arr.slice();
     });

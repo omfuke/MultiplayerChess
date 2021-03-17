@@ -10,7 +10,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route exact path="/" component={Board} />
-          {<Route exact path="/board" component={Join} />}
+          {/* {<Route exact path="/board" component={Join} />} */}
         </Switch>
       </div>
     </Router>
