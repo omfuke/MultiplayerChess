@@ -1,4 +1,5 @@
 import React from "react";
+import { Socket } from "socket.io-client";
 import "./Tyle.css";
 
 function Tyle({
@@ -13,6 +14,8 @@ function Tyle({
   chance,
   promoteWhite,
   promoteBlack,
+  popup,
+  res,
 }) {
   // console.log(detail, position);
 
@@ -21,7 +24,9 @@ function Tyle({
   const clickHandler = (checking, detail, position) => {
     if (detail.jump) {
       if (detail.name === "king") {
-        alert("game over");
+        res();
+        return;
+        // popup(true);
       }
       goToLocation(position);
 

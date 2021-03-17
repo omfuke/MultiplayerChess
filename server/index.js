@@ -47,11 +47,15 @@ io.on("connection", (socket) => {
     // socket.broadcast.to(data.room).emit("select", data);
   });
 
+  socket.on("result", (val) => {
+    console.log(val);
+    io.in(val).emit("final");
+  });
   socket.on("playTurn", (data) => {
     socket.broadcast.to(data.room).emit("playedTurn", data);
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", (val) => {
     console.log("user left");
   });
 });

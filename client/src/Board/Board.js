@@ -13,7 +13,7 @@ import { RookRules2 } from "./Rules/RookRules2";
 import { QueenRules2 } from "./Rules/QueenRules2";
 import { BishopRules2 } from "./Rules/BishopRules2";
 import { KingRules2 } from "./Rules/KingRules2";
-
+import Final from "./Final";
 import Join from "../Join";
 
 import { io } from "socket.io-client";
@@ -107,7 +107,7 @@ function Board({ history }) {
       { name: "rook", color: "white", selected: false, jump: false },
     ],
   ]);
-
+  const [pUp, setPopUp] = useState(false);
   const [gameId, setGameId] = useState("");
   const [yourPiece, setYourPiece] = useState(null);
   const [game, setGame] = useState(true);
@@ -121,6 +121,10 @@ function Board({ history }) {
   const [promoteWhiteLocation, setPromoteWhiteLocation] = useState(null);
 
   const [promoteBlackLocation, setPromoteBlackLocation] = useState(null);
+
+  const result = () => {
+    socket.emit("result", gameId);
+  };
 
   const promoteWhiteHandler = (piec) => {
     const newboard = board.map(function (arr) {
@@ -369,6 +373,10 @@ function Board({ history }) {
 
     socket.on("player2", (val) => {
       setPlayerChance(val);
+    });
+
+    socket.on("final", () => {
+      setPopUp(true);
     });
 
     socket.on("game", (data) => {
@@ -929,6 +937,8 @@ function Board({ history }) {
                   piece={piece}
                   promoteWhite={promoteWhite}
                   promoteBlack={promoteBlack}
+                  popup={setPopUp}
+                  res={result}
                 ></Tyle>
               );
             });
@@ -1019,6 +1029,11 @@ function Board({ history }) {
                 className="fas fa-chess-knight fa-2x"
               ></i>
             </div>
+          </div>
+        )}
+        {pUp && (
+          <div>
+            <Final turn={playerChance} />
           </div>
         )}
       </div>
