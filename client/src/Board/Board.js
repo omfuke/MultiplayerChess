@@ -339,6 +339,7 @@ function Board({ history }) {
   const [chance, setChance] = useState(false);
 
   const piece = chance ? "black" : "white";
+
   const [playerChance, setPlayerChance] = useState(false);
 
   useEffect(() => {
@@ -469,11 +470,17 @@ function Board({ history }) {
     //killing logic
 
     if (board[position[0]][position[1]].name) {
+      if (board[position[0]][position[1]].name === "king") {
+        alert("game over");
+        return;
+      }
+
       newboard[location[0]][location[1]] = {
         name: null,
         selected: false,
         jump: false,
       };
+
       newboard[position[0]][position[1]] = board[location[0]][location[1]];
       const piece2 = chance ? "white" : "black";
 
@@ -489,7 +496,9 @@ function Board({ history }) {
         })
       );
 
+
       // console.log(kingLocation, piece2);
+
 
       const pieces = [];
 
@@ -547,6 +556,7 @@ function Board({ history }) {
           });
         }
       }
+
       if (
         board[location[0]][location[1]].name === "pawn" &&
         board[location[0]][location[1]].color === "white"
@@ -569,6 +579,7 @@ function Board({ history }) {
           setBoard(newboard);
 
           return;
+
         }
       }
 
@@ -657,6 +668,8 @@ function Board({ history }) {
             return;
           }
         });
+
+
       }
     }
 
@@ -692,15 +705,18 @@ function Board({ history }) {
     });
     setBoard(newboard);
 
+
     return;
   };
 
   //this function is for toggle off the piece on Click
 
-  const allFalse = () => {
+  const allFalse = (position) => {
     const newboard = board.map(function (arr) {
       return arr.slice();
     });
+
+    setLocation(position);
 
     newboard.map((i, index) =>
       i.map((j, ind) => {
@@ -900,6 +916,7 @@ function Board({ history }) {
                 }
               }
 
+
               return (
                 <Tyle
                   key={[index, ind]}
@@ -1013,7 +1030,9 @@ function Board({ history }) {
             <Final turn={playerChance} />
           </div>
         )}
+
       </div>
+      
     </div>
   );
 }

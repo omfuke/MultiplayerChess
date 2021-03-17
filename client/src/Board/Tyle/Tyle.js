@@ -89,3 +89,4 @@ function Tyle({
 
 export default Tyle;
 //detail.color === piece
+
